@@ -1,5 +1,6 @@
 ---
 import SeatsGrid from "../components/SeatsGrid.astro";
+import TicketForm from "../components/TicketForm.astro";
 import MainLayout from "../layouts/MainLayout.astro";
 ---
 
@@ -11,32 +12,16 @@ import MainLayout from "../layouts/MainLayout.astro";
   </header>
   <section>
     <div class="container container-flex">
-      <div class="form-container">
-        <h2>Formulario</h2>
-        <p>Datos personales</p>
-        <label>
-          Nombre y Apellido
-          <input type="text" />
-        </label>
-        <label>
-          Cedula
-          <input type="text" />
-        </label>
-        <label>
-          Celular Whatsapp
-          <input type="text" />
-        </label>
-        <label>
-          Fecha de nacimiento
-          <input type="date" />
-        </label>
-      </div>
+      <TicketForm />
       <div class="reserve-resume">
         <h2>Resumen de la reserva</h2>
       </div>
     </div>
   </section>
   <section>
+    <div class="container">
+      <h2>Seleccion de asiento</h2>
+    </div>
     <SeatsGrid />
   </section>
 </MainLayout>
@@ -54,11 +39,8 @@ import MainLayout from "../layouts/MainLayout.astro";
     }
   }
 
-  .form-container {
-    flex: 3;
-  }
-
   .reserve-resume {
+    flex: 2;
   }
   section {
     width: 100%;

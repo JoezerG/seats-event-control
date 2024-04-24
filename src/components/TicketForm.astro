@@ -1,0 +1,40 @@
+<div class="form-container">
+  <h2>Formulario</h2>
+  <p>Datos personales</p>
+  <label>
+    Nombre y Apellido
+    <input required type="text" />
+  </label>
+  <label>
+    Cedula
+    <input required type="text" />
+  </label>
+  <label>
+    Celular Whatsapp
+    <input required type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" />
+  </label>
+  <label>
+    Fecha de nacimiento
+    <input required type="date" />
+  </label>
+</div>
+
+<style lang="scss">
+  .form-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      max-width: 320px;
+      gap: 10px;
+      margin-bottom: 15px;
+
+      input {
+        padding: 10px;
+      }
+    }
+  }
+</style>
