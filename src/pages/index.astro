@@ -1,16 +1,66 @@
 ---
-
+import SeatsGrid from "../components/SeatsGrid.astro";
+import MainLayout from "../layouts/MainLayout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout>
+  <header>
+    <div class="container">
+      <h1>Congreso de mujeres que son mujeres</h1>
+    </div>
+  </header>
+  <section>
+    <div class="container container-flex">
+      <div class="form-container">
+        <h2>Formulario</h2>
+        <p>Datos personales</p>
+        <label>
+          Nombre y Apellido
+          <input type="text" />
+        </label>
+        <label>
+          Cedula
+          <input type="text" />
+        </label>
+        <label>
+          Celular Whatsapp
+          <input type="text" />
+        </label>
+        <label>
+          Fecha de nacimiento
+          <input type="date" />
+        </label>
+      </div>
+      <div class="reserve-resume">
+        <h2>Resumen de la reserva</h2>
+      </div>
+    </div>
+  </section>
+  <section>
+    <SeatsGrid />
+  </section>
+</MainLayout>
+
+<style lang="scss">
+  .container {
+    display: block;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    &-flex {
+      display: flex;
+      gap: 1rem;
+    }
+  }
+
+  .form-container {
+    flex: 3;
+  }
+
+  .reserve-resume {
+  }
+  section {
+    width: 100%;
+  }
+</style>
