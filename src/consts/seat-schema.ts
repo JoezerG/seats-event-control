@@ -22,6 +22,6 @@ export const SeatsZonesFloor_2 = [
   { id: "Z-18", name: "18", columns: 8, rows: 5, seats: 40, floor: 2 },
   { id: "Z-19", name: "19", columns: 8, rows: 5, seats: 40, floor: 2 },
   { id: "Z-20", name: "20", columns: 4, rows: 4, seats: 13, floor: 2 },
-  { id: "Z-21", name: "21", columns: 4, rows: 5, seats: 20, floor: 2 },
-  { id: "Z-22", name: "22", columns: 8, rows: 5, seats: 40, floor: 2 },
+  { id: "Z-21", name: "21", columns: 5, rows: 4, seats: 20, floor: 2 },
+  { id: "Z-22", name: "22", columns: 5, rows: 8, seats: 40, floor: 2 },
 ];
