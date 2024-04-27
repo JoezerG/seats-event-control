@@ -2,7 +2,7 @@ import { column, defineDb, defineTable } from "astro:db";
 
 // https://astro.build/db/config
 
-const Reserves = defineTable({
+const Reserve = defineTable({
   columns: {
     citizenId: column.text({ primaryKey: true }),
     fullName: column.text(),
@@ -12,9 +12,19 @@ const Reserves = defineTable({
     seatZone: column.text(),
     seatNumber: column.text(),
     reservedAt: column.date(),
+    deliveredAt: column.date(),
+    delivered: column.boolean({ default: false }),
+  },
+});
+
+const Payment = defineTable({
+  columns: {
+    citizenId: column.text({ references: () => Reserve.columns.citizenId }),
+    amount: column.number(),
+    paidAt: column.date(),
   },
 });
 
 export default defineDb({
-  tables: { Reserves },
+  tables: { Reserve, Payment },
 });

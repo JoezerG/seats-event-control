@@ -1,23 +1,38 @@
-<div class="form-container">
-  <h2>Formulario</h2>
-  <p>Datos personales</p>
+<div id="form-data" class="form-container">
+  <h2>Datos del asistente</h2>
   <label>
     Nombre y Apellido
-    <input required type="text" />
+    <input name="fullName" required type="text" />
   </label>
   <label>
     Cedula
-    <input required type="text" />
+    <input name="citizenId" required type="text" />
   </label>
   <label>
     Celular Whatsapp
-    <input required type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" />
+    <input
+      name="cellphone"
+      required
+      type="tel"
+      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+    />
   </label>
   <label>
     Fecha de nacimiento
-    <input required type="date" />
+    <input name="birthday" required type="date" /> // POner fecha maxima
   </label>
 </div>
+
+<script>
+  const $inputs = document.querySelectorAll("#form-data input");
+  $inputs.forEach((el) =>
+    el.addEventListener("input", (evt) => {
+      const value = evt.target.value;
+      const id = evt.target.name;
+      sessionStorage.setItem(`r_${id}`, value);
+    })
+  );
+</script>
 
 <style lang="scss">
   .form-container {

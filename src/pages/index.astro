@@ -11,7 +11,7 @@ import MainLayout from "../layouts/MainLayout.astro";
     </div>
   </header>
   <section>
-    <div class="container container-flex">
+    <div class="container container-flex form">
       <TicketForm />
       <div class="reserve-resume">
         <h2>Resumen de la reserva</h2>
@@ -27,22 +27,10 @@ import MainLayout from "../layouts/MainLayout.astro";
 </MainLayout>
 
 <style lang="scss">
-  .container {
-    display: block;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-
-    &-flex {
-      display: flex;
-      gap: 1rem;
-    }
+  .form {
+    flex-direction: row;
   }
-
   .reserve-resume {
     flex: 2;
-  }
-  section {
-    width: 100%;
   }
 </style>

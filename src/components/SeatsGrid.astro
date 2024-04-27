@@ -34,12 +34,13 @@ import ZoneGrid from "./ZoneGrid.astro";
       const zone = b.getAttribute("data-zone");
       console.log({ zone, seat });
       alert(`Asiento Selecionado Zona: ${zone} Asiento: ${seat}`);
+      sessionStorage.setItem("r_seat-id", `-${seat}`);
     });
   });
 
   const $floorSelector = document.getElementById("floor-selector");
-  $floorSelector.addEventListener("change", (evt) => {
-    const floor = evt.currentTarget.value;
+  $floorSelector.addEventListener("change", (evt: HTMLSelectElement) => {
+    const floor = evt.value;
     showZonesByFloor(floor);
   });
 </script>
