@@ -12,8 +12,6 @@ const Reserve = defineTable({
     seatZone: column.text(),
     seatNumber: column.text(),
     reservedAt: column.date(),
-    deliveredAt: column.date(),
-    delivered: column.boolean({ default: false }),
   },
 });
 
@@ -22,6 +20,8 @@ const Payment = defineTable({
     citizenId: column.text({ references: () => Reserve.columns.citizenId }),
     amount: column.number(),
     paidAt: column.date(),
+    paymentType: column.text(),
+    paymentMethod: column.text(),
   },
 });
 

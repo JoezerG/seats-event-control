@@ -1,0 +1,53 @@
+---
+import { db } from "astro:db";
+import MainLayout from "../layouts/MainLayout.astro";
+import { Reserve } from "astro:db";
+const allReserves = await db.select().from(Reserve);
+---
+
+<MainLayout>
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre y Apellido</th>
+                <th>Cedula</th>
+                <th>Correo Electronico</th>
+                <th>Celular</th>
+                <th>Reservado el:</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                allReserves.map(
+                  (
+                    { fullName, citizenId, email, cellphone, reservedAt },
+                    i
+                  ) => (
+                    <tr>
+                      <td>{i + 1}</td>
+                      <td>{fullName}</td>
+                      <td>{citizenId}</td>
+                      <td>{email}</td>
+                      <td>{cellphone}</td>
+                      <td>
+                        {new Intl.DateTimeFormat("es-CO", {
+                          dateStyle: "medium",
+                          timeStyle: "medium",
+                        }).format(reservedAt)}
+                      </td>
+                    </tr>
+                  )
+                )
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>

@@ -1,56 +1,67 @@
----
-const { zone } = Astro.props;
-const { id, name, columns, rows, seats, floor } = zone;
----
+<script lang="ts">
+  import type { ReserveData } from "../stores/reserve";
+
+  export let zone;
+  export let onclick;
+  export let selected: ReserveData;
+  const { id, name, columns, rows, seats, floor } = zone;
+  const _seats = Array(seats)
+    .fill({})
+    .map((_, i) => {
+      const seatNumber = i + 1;
+      const seatId = `${id}-${seatNumber}`;
+      return { seatId, seatNumber };
+    });
+</script>
 
 <div
-  id={id}
-  class="zone"
-  zone-name={`Zona ${name}`}
-  class:list={[`columns-${columns}`, `rows-${rows}`, `f-${floor}`]}
+  {id}
+  data-zonename={`Zona ${name}`}
+  class={[
+    "zone",
+    `columns-${columns}`,
+    `rows-${rows}`,
+    `f-${floor}`,
+    `${selected.seatZone === name && "selected"}`,
+  ].join(" ")}
 >
-  {
-    Array(seats)
-      .fill(null)
-      .map((_, i) => {
-        const seatNumber = i + 1;
-        const seatId = `${id}-${seatNumber}`;
-        return (
-          <span
-            class="seat"
-            id={seatId}
-            data-seat={seatNumber}
-            data-zone={name}
-          >
-            {i + 1}
-          </span>
-        );
-      })
-  }
+  {#each _seats as { seatId, seatNumber }}
+    <button
+      id={seatId}
+      class={[
+        "seat",
+        `${selected.seatNumber === seatNumber.toString() && selected.seatZone === name && "selected"}`,
+      ].join(" ")}
+      on:click={() => onclick(name, seatNumber)}
+    >
+      {seatNumber}
+    </button>
+  {/each}
 </div>
 
 <style lang="scss">
   .zone {
-    background-color: #9d8189;
+    background-color: var(--bulma-primary-45);
     color: white;
     display: grid;
     gap: 3px;
     padding: 5px;
     position: relative;
 
-    &.hide {
-      display: none;
+    &.selected {
+      background-color: var(--bulma-warning-50);
     }
 
     &::before {
-      content: attr(zone-name);
+      content: attr(data-zonename);
       position: absolute;
-      top: -20px;
+      top: -25px;
       left: 0;
       right: 0;
-      height: 20px;
-      background-color: hsl(343, 13%, 46%);
+      height: 25px;
+      background-color: var(--bulma-primary-15);
       padding: 0 10px;
+      font-weight: bold;
     }
   }
 
@@ -63,14 +74,15 @@ const { id, name, columns, rows, seats, floor } = zone;
     text-align: center;
     border-radius: 6px;
     color: #9d8189;
-    font-size: 60%;
+    font-size: 70%;
 
-    &.disabled {
-      background-color: burlywood;
+    &.selected {
+      background-color: var(--bulma-primary-30);
+      color: var(--bulma-primary-invert-30);
     }
 
     &:hover {
-      background-color: blueviolet;
+      background-color: var(--bulma-info-50);
       color: white;
       cursor: pointer;
       scale: 1.5;

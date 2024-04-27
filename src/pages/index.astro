@@ -1,28 +1,28 @@
 ---
-import SeatsGrid from "../components/SeatsGrid.astro";
-import TicketForm from "../components/TicketForm.astro";
+import SeatsGrid from "../components/SeatsGrid.svelte";
+import TicketForm from "../components/TicketForm.svelte";
+import TicketResume from "../components/TicketResume.svelte";
 import MainLayout from "../layouts/MainLayout.astro";
 ---
 
 <MainLayout>
-  <header>
-    <div class="container">
-      <h1>Congreso de mujeres que son mujeres</h1>
-    </div>
-  </header>
-  <section>
-    <div class="container container-flex form">
-      <TicketForm />
-      <div class="reserve-resume">
-        <h2>Resumen de la reserva</h2>
+  <section class="section">
+    <div class="container form">
+      <div class="columns">
+        <TicketForm client:load />
+        <TicketResume client:load />
       </div>
     </div>
   </section>
-  <section>
-    <div class="container">
-      <h2>Seleccion de asiento</h2>
+  <section class="section">
+    <div class="container is-centered">
+      <div class="columns">
+        <div class="column">
+          <h2 class="title">Seleccion de asiento</h2>
+        </div>
+      </div>
     </div>
-    <SeatsGrid />
+    <SeatsGrid client:load />
   </section>
 </MainLayout>
 
@@ -30,7 +30,8 @@ import MainLayout from "../layouts/MainLayout.astro";
   .form {
     flex-direction: row;
   }
-  .reserve-resume {
-    flex: 2;
+  .actions {
+    display: flex;
+    justify-content: flex-end;
   }
 </style>
