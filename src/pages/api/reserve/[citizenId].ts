@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { Reserve, db, eq } from "astro:db";
+import { Payment, Reserve, db, eq } from "astro:db";
 
 export const GET: APIRoute = async ({ params }) => {
   const citizenId = params.citizenId;
@@ -13,6 +13,10 @@ export const GET: APIRoute = async ({ params }) => {
   if (reserve.length < 1) {
     return new Response("RESERVE NOT FOUNDED", { status: 404 });
   }
+  const payments = await db
+    .select()
+    .from(Payment)
+    .where(eq(Payment.citizenId, citizenId));
 
-  return new Response(JSON.stringify(reserve[0]));
+  return new Response(JSON.stringify({ reserve: reserve[0], payments }));
 };

@@ -1,8 +1,15 @@
 ---
+import { Reserve, db } from "astro:db";
 import SeatsGrid from "../components/SeatsGrid.svelte";
 import TicketForm from "../components/TicketForm.svelte";
-import TicketResume from "../components/TicketResume.svelte";
 import MainLayout from "../layouts/MainLayout.astro";
+
+const reserved = await db
+  .select({
+    zone: Reserve.seatZone,
+    seat: Reserve.seatNumber,
+  })
+  .from(Reserve);
 ---
 
 <MainLayout>
@@ -10,11 +17,10 @@ import MainLayout from "../layouts/MainLayout.astro";
     <div class="container form">
       <div class="columns">
         <TicketForm client:load />
-        <TicketResume client:load />
       </div>
     </div>
   </section>
-  <section class="section">
+  <section>
     <div class="container is-centered">
       <div class="columns">
         <div class="column">
@@ -22,7 +28,7 @@ import MainLayout from "../layouts/MainLayout.astro";
         </div>
       </div>
     </div>
-    <SeatsGrid client:load />
+    <SeatsGrid {reserved} client:load />
   </section>
 </MainLayout>
 

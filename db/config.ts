@@ -8,10 +8,12 @@ const Reserve = defineTable({
     fullName: column.text(),
     cellphone: column.text(),
     email: column.text(),
-    birthday: column.text(),
+    tshirtSize: column.text(),
     seatZone: column.text(),
     seatNumber: column.text(),
     reservedAt: column.date(),
+    redeemed: column.boolean({ default: false }),
+    redeemedAt: column.date({ optional: true }),
   },
 });
 
@@ -19,9 +21,9 @@ const Payment = defineTable({
   columns: {
     citizenId: column.text({ references: () => Reserve.columns.citizenId }),
     amount: column.number(),
-    paidAt: column.date(),
     paymentType: column.text(),
     paymentMethod: column.text(),
+    paidAt: column.date(),
   },
 });
 

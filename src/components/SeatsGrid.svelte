@@ -1,7 +1,7 @@
 <script lang="ts">
   import ZoneGrid from "./ZoneGrid.svelte";
   import { SeatsZonesFloor_1, SeatsZonesFloor_2 } from "../consts/seat-schema";
-  import { currentReserve } from "../stores/reserve";
+  import { currentSeat } from "../stores/reserve";
 
   export const reserved: { zone: String; seat: string }[] = [];
 
@@ -13,8 +13,9 @@
   }
 
   function handleSeatClick(zone, seat) {
-    currentReserve.set({
-      ...$currentReserve,
+    console.log(zone, seat);
+
+    currentSeat.set({
       seatNumber: seat.toString(),
       seatZone: zone.toString(),
     });
@@ -55,23 +56,13 @@
 
       {#if visibleFloor === "1"}
         {#each SeatsZonesFloor_1 as zone}
-          <ZoneGrid
-            {zone}
-            {reserved}
-            selected={$currentReserve}
-            onclick={handleSeatClick}
-          />
+          <ZoneGrid {zone} {reserved} onclick={handleSeatClick} />
         {/each}
       {/if}
 
       {#if visibleFloor === "2"}
         {#each SeatsZonesFloor_2 as zone}
-          <ZoneGrid
-            {zone}
-            {reserved}
-            selected={$currentReserve}
-            onclick={handleSeatClick}
-          />
+          <ZoneGrid {zone} {reserved} onclick={handleSeatClick} />
         {/each}
       {/if}
     </div>
@@ -89,17 +80,6 @@
     column-gap: 10px;
     row-gap: 30px;
     position: relative;
-
-    &.disabled::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #f2f2f2b3;
-      z-index: 99;
-    }
   }
 
   #altar {

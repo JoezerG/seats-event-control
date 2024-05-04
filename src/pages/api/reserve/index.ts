@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { db, NOW, Reserve } from "astro:db";
+import { db, NOW, Payment, Reserve } from "astro:db";
 import type { ReserveData } from "../../../stores/reserve";
 
 const response = (msg: string, status: number, isError: boolean = false) =>
@@ -7,28 +7,38 @@ const response = (msg: string, status: number, isError: boolean = false) =>
 
 export const POST: APIRoute = async ({ request }) => {
   const data = (await request.json()) as ReserveData;
-  console.log(data);
   const {
     citizenId,
     fullName,
-    birthday,
+    tshirtSize,
     cellphone,
     email,
     seatNumber,
     seatZone,
+    paymentMethod,
+    paymentType,
   } = data;
 
   try {
     await db.insert(Reserve).values({
       citizenId,
       fullName,
-      birthday,
+      tshirtSize,
       cellphone,
       email,
       seatNumber,
       seatZone,
       reservedAt: NOW,
     });
+
+    const _payment = {
+      citizenId,
+      paidAt: NOW,
+      paymentMethod,
+      paymentType,
+      amount: paymentType === "total-payment" ? 90000 : 45000,
+    };
+    await db.insert(Payment).values(_payment);
   } catch (error) {
     console.error(error);
     if (error.code === "SQLITE_CONSTRAINT_PRIMARYKEY") {
@@ -41,7 +51,7 @@ export const POST: APIRoute = async ({ request }) => {
   return response("Reserva almacenada", 200);
 };
 
-export const GET: APIRoute = async ({ resquest }) => {
+export const GET: APIRoute = async () => {
   const reserves = await db.select().from(Reserve);
   return new Response(JSON.stringify(reserves), { status: 200 });
 };

@@ -1,19 +1,17 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ReserveData } from "../stores/reserve";
   import type { Zone } from "../consts/seat-schema";
+  import { currentSeat } from "../stores/reserve";
 
   export let zone: Zone;
   export let onclick;
-  export let selected: ReserveData;
   export let reserved: { zone: String; seat: string }[];
   const { id, name, columns, rows, seats, floor, invert, hiddenCells } = zone;
   let _seats = [];
   const totalCells = columns * rows;
-  console.log(reserved);
 
   function isReserved(seatId: string) {
-    console.log(reserved, seatId);
+    // console.log(reserved, seatId);
     return reserved.some((r) => r.seat === seatId && r.zone === name);
   }
 
@@ -48,7 +46,7 @@
     `columns-${columns}`,
     `rows-${rows}`,
     `f-${floor}`,
-    `${selected.seatZone === name && "selected"}`,
+    `${$currentSeat.seatZone === name && "selected"}`,
   ].join(" ")}
 >
   {#each _seats as { seatId, seatNumber, hidden, reserved }}
@@ -61,7 +59,7 @@
         id={seatId}
         class={[
           "seat",
-          `${selected.seatNumber === seatNumber.toString() && selected.seatZone === name && "selected"}`,
+          `${$currentSeat.seatNumber === seatNumber.toString() && $currentSeat.seatZone === name && "selected"}`,
         ].join(" ")}
         on:click={() => onclick(name, seatNumber)}
       >
@@ -153,6 +151,8 @@
   #Z-3 {
     grid-column: 20/25;
     grid-row: 7/13;
+    direction: rtl;
+
     button:nth-of-child(2) {
       order: 5;
       background-color: blue !important;
@@ -163,11 +163,13 @@
   #Z-4 {
     grid-column: 15/20;
     grid-row: 7/13;
+    direction: rtl;
   }
 
   #Z-5 {
     grid-column: 10/15;
     grid-row: 7/13;
+    direction: rtl;
   }
 
   #Z-6 {
