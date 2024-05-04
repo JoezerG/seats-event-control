@@ -4,7 +4,6 @@
   let currentReserve: Record<string, any> = {};
   let fullName = "";
   let citizenId = "";
-  let email = "";
   let cellphone = "";
   let tshirtSize = "";
   let paymentType = "";
@@ -27,7 +26,6 @@
       body: JSON.stringify({
         fullName,
         citizenId,
-        email,
         cellphone,
         tshirtSize,
         paymentMethod,
@@ -45,6 +43,12 @@
     currentReserve = {};
     setTimeout(() => {
       saving = false;
+      fullName = "";
+      citizenId = "";
+      cellphone = "";
+      tshirtSize = "";
+      paymentType = "";
+      paymentMethod = "";
     }, 10000);
   }
 </script>
@@ -77,7 +81,7 @@
       />
     </div>
   </div>
-  <div class="field">
+  <!-- <div class="field">
     <div class="control">
       <label>Correo electronico</label>
       <input
@@ -89,7 +93,7 @@
         bind:value={email}
       />
     </div>
-  </div>
+  </div> -->
   <div class="field">
     <div class="control">
       <label>Celular</label>
@@ -152,16 +156,12 @@
   {#if currentReserve}
     <div class="card">
       <div class="card-content">
-        <p class="title">Reserva para {currentReserve.fullName || ""}</p>
+        <p class="title">Reserva para {fullName}</p>
         <table class="table is-fullwidth">
           <tbody>
             <tr>
               <th>Cedula</th>
               <td>{citizenId}</td>
-            </tr>
-            <tr>
-              <th>Correo electronico</th>
-              <td>{email}</td>
             </tr>
             <tr>
               <th>Celular</th>

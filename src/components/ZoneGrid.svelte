@@ -11,7 +11,6 @@
   const totalCells = columns * rows;
 
   function isReserved(seatId: string) {
-    // console.log(reserved, seatId);
     return reserved.some((r) => r.seat === seatId && r.zone === name);
   }
 
@@ -52,11 +51,10 @@
   {#each _seats as { seatId, seatNumber, hidden, reserved }}
     {#if hidden}
       <div></div>
-    {:else if reserved}
-      <div class="reserved">X</div>
     {:else}
       <button
         id={seatId}
+        disabled={reserved}
         class={[
           "seat",
           `${$currentSeat.seatNumber === seatNumber.toString() && $currentSeat.seatZone === name && "selected"}`,
@@ -105,6 +103,14 @@
     border-radius: 6px;
     color: #644e54;
     font-size: 70%;
+
+    &:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+      &:hover {
+        scale: 0;
+      }
+    }
 
     &.selected {
       background-color: var(--bulma-primary-30);

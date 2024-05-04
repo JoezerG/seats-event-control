@@ -4,7 +4,6 @@ export type ReserveData = {
   citizenId: string;
   fullName: string;
   cellphone: string;
-  email: string;
   tshirtSize: string;
   seatZone: string;
   seatNumber: string;

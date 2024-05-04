@@ -3,6 +3,17 @@
   let citizenId = "";
   let reserve;
   let payments = [];
+
+  const PaymentsTypes = {
+    "first-payment": "Primer Abono",
+  };
+
+  const PaymentsMethods = {
+    cash: "Efectivo 💵",
+    transfer: "Tranferencia 💳",
+    digital: "Datafono",
+  };
+
   async function searchReservation() {
     try {
       const result = await fetch(`/api/reserve/${citizenId}`);
@@ -12,6 +23,19 @@
     } catch (error) {
       alert("Reverva no encontrada");
     }
+  }
+
+  async function addPayment() {
+    const result = await fetch(`/api/payments`, {
+      method: "POST",
+      body: JSON.stringify({
+        citizenId,
+        paymentMethod: "cash",
+        paymentType: "final-payment",
+      }),
+    });
+    const data = await result.json();
+    console.log(data);
   }
 </script>
 
@@ -52,10 +76,6 @@
                 <td>{reserve?.citizenId}</td>
               </tr>
               <tr>
-                <th>Email</th>
-                <td>{reserve?.email}</td>
-              </tr>
-              <tr>
                 <th>Celular</th>
                 <td>{reserve?.cellphone}</td>
               </tr>
@@ -84,14 +104,15 @@
                     <ul>
                       {#each payments as { paidAt, paymentType, paymentMethod }}
                         <li>
-                          {DateTime.fromISO(paidAt).toLocaleString(
-                            DateTime.DATE_MED
-                          )}
-                          {paidAt}
+                          <b
+                            >{DateTime.fromISO(paidAt).toLocaleString(
+                              DateTime.DATE_MED
+                            )}</b
+                          >
                           <br />
-                          {paymentType}
+                          {PaymentsTypes[paymentType]}
                           <br />
-                          {paymentMethod}
+                          {PaymentsMethods[paymentMethod]}
                         </li>
                       {/each}
                     </ul>
@@ -112,7 +133,7 @@
             Pagado ✅
           {/if}
         </div>
-        <div class="card-footer-item">
+        <!-- <div class="card-footer-item">
           {#if reserve?.redeemed}
             Kit entregado ✅
           {:else}
@@ -128,7 +149,7 @@
               Entregar Kit
             </button>
           {/if}
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

@@ -12,7 +12,6 @@ export const POST: APIRoute = async ({ request }) => {
     fullName,
     tshirtSize,
     cellphone,
-    email,
     seatNumber,
     seatZone,
     paymentMethod,
@@ -25,7 +24,6 @@ export const POST: APIRoute = async ({ request }) => {
       fullName,
       tshirtSize,
       cellphone,
-      email,
       seatNumber,
       seatZone,
       reservedAt: NOW,
@@ -43,6 +41,10 @@ export const POST: APIRoute = async ({ request }) => {
     console.error(error);
     if (error.code === "SQLITE_CONSTRAINT_PRIMARYKEY") {
       return response("Ya existe una reserva con este Documento", 401, true);
+    }
+
+    if (error.code === "SQLITE_CONSTRAINT_NOTNULL") {
+      return response("Falta un campo", 500, true);
     }
 
     return response("ERROR Al amacenar la reserva", 500, true);

@@ -3,7 +3,7 @@
   import { SeatsZonesFloor_1, SeatsZonesFloor_2 } from "../consts/seat-schema";
   import { currentSeat } from "../stores/reserve";
 
-  export const reserved: { zone: String; seat: string }[] = [];
+  export let reserved: { zone: String; seat: string }[] = [];
 
   let visibleFloor = "1";
 
@@ -13,8 +13,6 @@
   }
 
   function handleSeatClick(zone, seat) {
-    console.log(zone, seat);
-
     currentSeat.set({
       seatNumber: seat.toString(),
       seatZone: zone.toString(),
