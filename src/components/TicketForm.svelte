@@ -81,19 +81,6 @@
       />
     </div>
   </div>
-  <!-- <div class="field">
-    <div class="control">
-      <label>Correo electronico</label>
-      <input
-        required
-        id="email"
-        class="input"
-        type="email"
-        placeholder="example@mail.com"
-        bind:value={email}
-      />
-    </div>
-  </div> -->
   <div class="field">
     <div class="control">
       <label>Celular</label>
@@ -145,7 +132,7 @@
             <option></option>
             <option value="cash">Efectivo</option>
             <option value="transfer">Transferencia</option>
-            <option value="digital">Punto de venta</option>
+            <option value="digital">Datafono</option>
           </select>
         </div>
       </div>

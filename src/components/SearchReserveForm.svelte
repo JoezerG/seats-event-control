@@ -6,6 +6,8 @@
 
   const PaymentsTypes = {
     "first-payment": "Primer Abono",
+    "final-payment": "Ultimo Abono",
+    "total-payment": "Pago completo",
   };
 
   const PaymentsMethods = {
