@@ -1,17 +1,43 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import type { ReserveData } from "../stores/reserve";
+  import type { Zone } from "../consts/seat-schema";
 
-  export let zone;
+  export let zone: Zone;
   export let onclick;
   export let selected: ReserveData;
-  const { id, name, columns, rows, seats, floor } = zone;
-  const _seats = Array(seats)
-    .fill({})
-    .map((_, i) => {
-      const seatNumber = i + 1;
-      const seatId = `${id}-${seatNumber}`;
-      return { seatId, seatNumber };
-    });
+  export let reserved: { zone: String; seat: string }[];
+  const { id, name, columns, rows, seats, floor, invert, hiddenCells } = zone;
+  let _seats = [];
+  const totalCells = columns * rows;
+  console.log(reserved);
+
+  function isReserved(seatId: string) {
+    console.log(reserved, seatId);
+    return reserved.some((r) => r.seat === seatId && r.zone === name);
+  }
+
+  let seatNumber = 1;
+  for (let index = 0; index < totalCells; index++) {
+    const hidden = hiddenCells.some((hc) => hc === index + 1);
+    if (hidden) {
+      _seats.push({ hidden });
+    } else {
+      const seatId = `Z${name}-${seatNumber}`;
+      _seats.push({
+        seatNumber,
+        seatId,
+        reserved: isReserved(seatNumber.toString()),
+      });
+      seatNumber++;
+    }
+  }
+
+  onMount(() => {
+    if (invert) {
+      _seats = _seats.reverse();
+    }
+  });
 </script>
 
 <div
@@ -25,25 +51,32 @@
     `${selected.seatZone === name && "selected"}`,
   ].join(" ")}
 >
-  {#each _seats as { seatId, seatNumber }}
-    <button
-      id={seatId}
-      class={[
-        "seat",
-        `${selected.seatNumber === seatNumber.toString() && selected.seatZone === name && "selected"}`,
-      ].join(" ")}
-      on:click={() => onclick(name, seatNumber)}
-    >
-      {seatNumber}
-    </button>
+  {#each _seats as { seatId, seatNumber, hidden, reserved }}
+    {#if hidden}
+      <div></div>
+    {:else if reserved}
+      <div class="reserved">X</div>
+    {:else}
+      <button
+        id={seatId}
+        class={[
+          "seat",
+          `${selected.seatNumber === seatNumber.toString() && selected.seatZone === name && "selected"}`,
+        ].join(" ")}
+        on:click={() => onclick(name, seatNumber)}
+      >
+        {seatNumber}
+      </button>
+    {/if}
   {/each}
 </div>
 
 <style lang="scss">
   .zone {
-    background-color: var(--bulma-primary-45);
+    background-color: #e7e7e7;
     color: white;
     display: grid;
+    flex-wrap: wrap;
     gap: 3px;
     padding: 5px;
     position: relative;
@@ -66,14 +99,13 @@
   }
 
   .seat {
-    width: 100%;
-    height: 100%;
     background-color: #ffe5d9;
+    border: 1px solid #9d8189;
     display: grid;
     place-content: center;
     text-align: center;
     border-radius: 6px;
-    color: #9d8189;
+    color: #644e54;
     font-size: 70%;
 
     &.selected {
@@ -82,65 +114,49 @@
     }
 
     &:hover {
-      background-color: var(--bulma-info-50);
+      background-color: #3fa9f5;
+      border-color: #2b79b1;
       color: white;
       cursor: pointer;
-      scale: 1.5;
+      scale: 1.8;
     }
   }
 
   .columns {
-    &-4 {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    &-5 {
-      grid-template-columns: repeat(5, 1fr);
-    }
-    &-6 {
-      grid-template-columns: repeat(6, 1fr);
-    }
-    &-8 {
-      grid-template-columns: repeat(8, 1fr);
-    }
-    &-10 {
-      grid-template-columns: repeat(10, 1fr);
-    }
-    &-12 {
-      grid-template-columns: repeat(12, 1fr);
+    @for $i from 1 through 20 {
+      &-#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+      }
     }
   }
 
   .rows {
-    &-2 {
-      grid-template-rows: repeat(2, 1fr);
-    }
-    &-3 {
-      grid-template-rows: repeat(3, 1fr);
-    }
-    &-4 {
-      grid-template-rows: repeat(4, 1fr);
-    }
-    &-5 {
-      grid-template-rows: repeat(5, 1fr);
-    }
-    &-6 {
-      grid-template-rows: repeat(6, 1fr);
+    @for $i from 1 through 20 {
+      &-#{$i} {
+        grid-template-rows: repeat($i, 1fr);
+      }
     }
   }
 
   #Z-1 {
     grid-column: 25/30;
     grid-row: 2/6;
+    grid-auto-flow: column;
   }
 
   #Z-2 {
     grid-column: 25/30;
     grid-row: 6/13;
+    grid-auto-flow: column;
   }
 
   #Z-3 {
     grid-column: 20/25;
     grid-row: 7/13;
+    button:nth-of-child(2) {
+      order: 5;
+      background-color: blue !important;
+    }
     // rotate: -8deg;
   }
 
@@ -152,99 +168,110 @@
   #Z-5 {
     grid-column: 10/15;
     grid-row: 7/13;
-    // rotate: 8deg;
   }
 
   #Z-6 {
     grid-column: 5/10;
     grid-row: 7/13;
+    grid-auto-flow: column;
   }
 
   #Z-7 {
     grid-column: 5/10;
     grid-row: 2/7;
-    order: -1;
+    grid-auto-flow: column;
   }
 
   #Z-8 {
     grid-column: 1/5;
-    grid-row: 2/10;
+    grid-row: 1/11;
+    grid-auto-flow: column;
   }
 
   #Z-9 {
     grid-column: 1/5;
-    grid-row: 10/14;
+    grid-row: 11/18;
+    grid-auto-flow: column;
   }
 
   #Z-10 {
     grid-column: 5/10;
-    grid-row: 14/18;
+    grid-row: 13/18;
+    direction: rtl;
   }
 
   #Z-11 {
     grid-column: 10/17;
     grid-row: 14/18;
+    direction: rtl;
   }
 
   #Z-12 {
     grid-column: 18/25;
-    grid-row: 14/17;
+    grid-row: 14/18;
+    direction: rtl;
   }
 
   #Z-13 {
     grid-column: 25/30;
-    grid-row: 15/17;
-  }
-
-  #Z-13 {
-    grid-column: 25/30;
-    grid-row: 15/17;
+    grid-row: 15/18;
+    direction: rtl;
   }
 
   #Z-14 {
     grid-column: 4/10;
     grid-row: 18/22;
+    direction: rtl;
   }
 
   #Z-15 {
     grid-column: 12/17;
     grid-row: 18/22;
+    direction: rtl;
   }
 
   #Z-16 {
     grid-column: 25/30;
-    grid-row: 17/22;
+    grid-row: 16/22;
+    direction: rtl;
   }
 
   #Z-17 {
     grid-column: 20/25;
-    grid-row: 17/22;
+    grid-row: 16/22;
+    direction: rtl;
   }
 
   #Z-18 {
-    grid-column: 15/20;
-    grid-row: 17/22;
+    grid-column: 14/20;
+    grid-row: 16/22;
+    direction: rtl;
   }
 
   #Z-19 {
-    grid-column: 10/15;
-    grid-row: 17/22;
+    grid-column: 7/14;
+    grid-row: 16/22;
+    direction: rtl;
   }
 
   #Z-20 {
     grid-column: 1/7;
-    grid-row: 15/22;
-    rotate: 45deg;
-    translate: 60px -60px;
+    grid-row: 19/23;
+    // rotate: 45deg;
+    // translate: 60px -60px;
+    direction: rtl;
   }
 
   #Z-21 {
-    grid-column: 1/6;
-    grid-row: 8/12;
+    grid-column: 1/7;
+    grid-row: 9/19;
+    grid-auto-flow: column;
+    // direction: rtl;
   }
 
   #Z-22 {
-    grid-column: 1/6;
-    grid-row: 2/8;
+    grid-column: 1/7;
+    grid-row: 1/9;
+    grid-auto-flow: column;
   }
 </style>

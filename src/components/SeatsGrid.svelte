@@ -1,7 +1,9 @@
-<script>
-  import { SeatsZonesFloor_1, SeatsZonesFloor_2 } from "../consts/seat-schema";
+<script lang="ts">
   import ZoneGrid from "./ZoneGrid.svelte";
-  import { enableSeats, currentReserve } from "../stores/reserve";
+  import { SeatsZonesFloor_1, SeatsZonesFloor_2 } from "../consts/seat-schema";
+  import { currentReserve } from "../stores/reserve";
+
+  export const reserved: { zone: String; seat: string }[] = [];
 
   let visibleFloor = "1";
 
@@ -38,7 +40,7 @@
 </div>
 <div class="columns">
   <div class="column">
-    <div id="seats-grid" class={[`${!enableSeats && "disabled"}`]}>
+    <div id="seats-grid">
       <div id="altar">
         <p>Altar</p>
       </div>
@@ -55,6 +57,7 @@
         {#each SeatsZonesFloor_1 as zone}
           <ZoneGrid
             {zone}
+            {reserved}
             selected={$currentReserve}
             onclick={handleSeatClick}
           />
@@ -65,6 +68,7 @@
         {#each SeatsZonesFloor_2 as zone}
           <ZoneGrid
             {zone}
+            {reserved}
             selected={$currentReserve}
             onclick={handleSeatClick}
           />
@@ -80,7 +84,7 @@
     grid-template-columns: repeat(29, 1fr);
     grid-template-rows: repeat(21, 1fr);
     width: 100%;
-    height: 100vh;
+    height: 90vh;
     padding: 10px;
     column-gap: 10px;
     row-gap: 30px;
@@ -108,7 +112,7 @@
 
   #entrada-metro {
     grid-column: 1/4;
-    grid-row: 14/18;
+    grid-row: 17/20;
     background-color: cadetblue;
     display: grid;
     place-items: center;
@@ -117,12 +121,16 @@
   }
 
   #entrada-principal {
-    grid-column: 28/30;
+    grid-column: 27/30;
     grid-row: 12/15;
     background-color: cadetblue;
     display: grid;
     place-items: center;
     text-align: center;
     color: white;
+  }
+
+  #floor-selector-container {
+    margin-bottom: 2rem;
   }
 </style>
