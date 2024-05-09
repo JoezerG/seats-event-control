@@ -49,7 +49,8 @@
       tshirtSize = "";
       paymentType = "";
       paymentMethod = "";
-    }, 10000);
+      location.reload();
+    }, 5000);
   }
 </script>
 
