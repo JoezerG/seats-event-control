@@ -19,8 +19,27 @@ const isActive = (path: string) => {
         href="/find">Consultar reserva</a
       >
     </li>
+    <li>
+      <a
+        href="/reserves"
+        class="button"
+        class:list={[{ "is-primary": isActive("/reserves") }]}
+        >Todas las reservas</a
+      >
+    </li>
+    <!-- <li>
+      <button id="download-file" class="button">
+        Descargar todas las reservas
+      </button>
+    </li> -->
   </ul>
 </nav>
+
+<script>
+  import { getFile } from "../download";
+  const $button = document.getElementById("download-file");
+  $button.addEventListener("click", getFile);
+</script>
 
 <style>
   nav {

@@ -1,0 +1,65 @@
+---
+import { Reserve } from "astro:db";
+import { db } from "astro:db";
+import MainLayout from "../layouts/MainLayout.astro";
+import { DateTime } from "luxon";
+
+const reserves = await db.select().from(Reserve);
+console.log(reserves);
+---
+
+<MainLayout>
+  <div class="container is-widescree">
+    <div class="columns">
+      <div class="column">
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre y Apellido</th>
+              <th>Cedula</th>
+              <th>Celular</th>
+              <th>Talla</th>
+              <th>Asiento</th>
+              <th>Reservado el</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              reserves.map(
+                (
+                  {
+                    fullName,
+                    citizenId,
+                    cellphone,
+                    tshirtSize,
+                    seatNumber,
+                    seatZone,
+                    reservedAt,
+                  },
+                  i
+                ) => (
+                  <tr>
+                    <td>{i + 1}</td>
+                    <td>{fullName}</td>
+                    <td>{citizenId}</td>
+                    <td>{cellphone}</td>
+                    <td>{tshirtSize}</td>
+                    <td>
+                      Zona: {seatZone} | Silla: {seatNumber}
+                    </td>
+                    <td>
+                      {DateTime.fromJSDate(reservedAt)
+                        .minus({ hours: 5 })
+                        .toLocaleString(DateTime.DATETIME_MED)}
+                    </td>
+                  </tr>
+                )
+              )
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</MainLayout>
