@@ -1,12 +1,20 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import SearchReserveForm from "../components/SearchReserveForm.svelte";
+import SeatsGrid from "../components/SeatsGrid.svelte";
+import { Reserve, db } from "astro:db";
+const reserved = await db
+  .select({
+    zone: Reserve.seatZone,
+    seat: Reserve.seatNumber,
+  })
+  .from(Reserve);
 ---
 
 <MainLayout>
   <section class="section">
     <div class="container">
-      <SearchReserveForm client:load />
+      <SearchReserveForm {reserved} client:load />
     </div>
   </section>
 </MainLayout>

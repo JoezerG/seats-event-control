@@ -20,3 +20,17 @@ export const GET: APIRoute = async ({ params }) => {
 
   return new Response(JSON.stringify({ reserve: reserve[0], payments }));
 };
+
+export const PUT: APIRoute = async ({ request }) => {
+  const data = await request.json();
+
+  const result = await db
+    .update(Reserve)
+    .set({
+      seatNumber: data.seatNumber,
+      seatZone: data.seatZone,
+    })
+    .where(eq(Reserve.citizenId, data.citizenId));
+
+  return new Response(JSON.stringify({ result }));
+};

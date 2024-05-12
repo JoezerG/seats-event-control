@@ -5,11 +5,16 @@ import MainLayout from "../layouts/MainLayout.astro";
 import { DateTime } from "luxon";
 
 const reserves = await db.select().from(Reserve);
-console.log(reserves);
 ---
 
 <MainLayout>
-  <div class="container is-widescree">
+  <div class="container is-widescreen">
+    <div class="section hero">
+      <div class="hero-body">
+        <h1 class="title">Todas las reservas</h1>
+        <button class="button is-primary">Descargar csv</button>
+      </div>
+    </div>
     <div class="columns">
       <div class="column">
         <table class="table is-fullwidth">

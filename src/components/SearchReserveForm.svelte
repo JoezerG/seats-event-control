@@ -1,9 +1,14 @@
 <script lang="ts">
   import { DateTime } from "luxon";
+  import SeatsGrid from "./SeatsGrid.svelte";
+  import { currentSeat } from "../stores/reserve";
   let citizenId = "";
   let reserve;
   let payments = [];
+  let editMode: false;
+  let saving = false;
 
+  export let reserved = [];
   const PaymentsTypes = {
     "first-payment": "Primer Abono",
     "final-payment": "Ultimo Abono",
@@ -27,8 +32,28 @@
     }
   }
 
+  async function updateSeats() {
+    saving = true;
+    reserve.seatZone = $currentSeat.seatZone;
+    reserve.seatNumber = $currentSeat.seatNumber;
+    const result = await fetch(`/api/reserve/${citizenId}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        citizenId,
+        seatZone: $currentSeat.seatZone,
+        seatNumber: $currentSeat.seatNumber,
+      }),
+    });
+
+    const data = await result.json();
+    saving = false;
+    editMode = false;
+    currentSeat.set({});
+    await searchReservation();
+  }
+
   async function addPayment() {
-    const result = await fetch(`/api/payments`, {
+    const result = await fetch(`/api/reserve/payments`, {
       method: "POST",
       body: JSON.stringify({
         citizenId,
@@ -37,7 +62,8 @@
       }),
     });
     const data = await result.json();
-    console.log(data);
+    currentSeat.set({});
+    await searchReservation();
   }
 </script>
 
@@ -71,29 +97,51 @@
             <tbody>
               <tr>
                 <th>Nombre y Apellido</th>
-                <td>{reserve?.fullName}</td>
+                <td colspan="2">{reserve?.fullName}</td>
               </tr>
               <tr>
                 <th>Cedula</th>
-                <td>{reserve?.citizenId}</td>
+                <td colspan="2">{reserve?.citizenId}</td>
               </tr>
               <tr>
                 <th>Celular</th>
-                <td>{reserve?.cellphone}</td>
+                <td colspan="2">{reserve?.cellphone}</td>
               </tr>
               <tr>
                 <th>Talla camiseta</th>
-                <td>{reserve?.tshirtSize}</td>
+                <td colspan="2">{reserve?.tshirtSize}</td>
               </tr>
               <tr>
                 <th>Asiento seleccionado</th>
                 <td>
-                  Zone: {reserve?.seatZone} Asiento: {reserve?.seatNumber}
+                  Zone:
+                  {reserve?.seatZone}
+
+                  Asiento:
+                  {reserve.seatNumber}
+                </td>
+                <td>
+                  {#if editMode}
+                    <button
+                      disabled={saving}
+                      on:click={updateSeats}
+                      class="button is-primary"
+                    >
+                      Guardar
+                    </button>
+                  {:else}
+                    <button
+                      on:click={() => (editMode = true)}
+                      class="button is-danger"
+                    >
+                      Editar
+                    </button>
+                  {/if}
                 </td>
               </tr>
               <tr>
                 <th>Reservado el</th>
-                <td>
+                <td colspan="2">
                   {DateTime.fromISO(reserve?.reservedAt).toLocaleString(
                     DateTime.DATE_MED
                   )}
@@ -127,12 +175,18 @@
       </div>
       <div class="card-footer">
         <div class="card-footer-item">
-          {#if !payments?.some((p) => p.paymentType === "total-payment" || p.paymentType === "final-payment")}
-            <button id="set-last-payment" class="button is-primary">
-              Abonar Ultimo Pago
-            </button>
-          {:else}
-            Pagado ✅
+          {#if reserve}
+            {#if !payments?.some((p) => p.paymentType === "total-payment" || p.paymentType === "final-payment")}
+              <button
+                on:click={addPayment}
+                id="set-last-payment"
+                class="button is-primary"
+              >
+                Abonar Ultimo Pago
+              </button>
+            {:else}
+              Pagado ✅
+            {/if}
           {/if}
         </div>
         <!-- <div class="card-footer-item">
@@ -156,3 +210,6 @@
     </div>
   </div>
 </div>
+{#if editMode}
+  <SeatsGrid {reserved} />
+{/if}
