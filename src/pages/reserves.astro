@@ -4,7 +4,10 @@ import { db } from "astro:db";
 import MainLayout from "../layouts/MainLayout.astro";
 import { DateTime } from "luxon";
 
-const reserves = await db.select().from(Reserve);
+const reservesRaw = await db.select().from(Reserve);
+const reserves = reservesRaw
+  .sort((a, b) => Number(a.seatNumber) - Number(b.seatNumber))
+  .sort((a, b) => Number(a.seatZone) - Number(b.seatZone));
 ---
 
 <MainLayout>
@@ -25,6 +28,7 @@ const reserves = await db.select().from(Reserve);
               <th>Cedula</th>
               <th>Celular</th>
               <th>Talla</th>
+              <th>Zona</th>
               <th>Asiento</th>
               <th>Reservado el</th>
             </tr>
@@ -50,9 +54,8 @@ const reserves = await db.select().from(Reserve);
                     <td>{citizenId}</td>
                     <td>{cellphone}</td>
                     <td>{tshirtSize}</td>
-                    <td>
-                      Zona: {seatZone} | Silla: {seatNumber}
-                    </td>
+                    <td>{seatZone}</td>
+                    <td>{seatNumber}</td>
                     <td>
                       {DateTime.fromJSDate(reservedAt)
                         .minus({ hours: 5 })
